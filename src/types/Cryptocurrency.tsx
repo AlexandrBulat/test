@@ -4,7 +4,7 @@ export enum Converter {
 }
 
 export interface Cryptocurrency {
-    readonly id: string
+    readonly id: number
     readonly name: string
     readonly symbol: string
     readonly cmcRank: number

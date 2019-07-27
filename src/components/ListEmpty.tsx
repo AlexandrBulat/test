@@ -18,8 +18,23 @@ const Message = styled.Text`
     color: ${Theme.color.black}
 `
 
+const ErrorMessage = styled(Message)`
+    color: ${Theme.color.red}
+`
+
 interface Props {
     message: string
+}
+
+export class ListError extends React.PureComponent<Props> {
+    render() {
+        const { message } = this.props
+        return (
+            <Wrapper>
+                <ErrorMessage>{message}</ErrorMessage>
+            </Wrapper>
+        )
+    }
 }
 
 export default class ListEmpty extends React.PureComponent<Props> {

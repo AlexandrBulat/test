@@ -7,9 +7,8 @@ import { fetchCryptocurrencies } from '../actions';
 import { getCryptocurrencies, isLoading, getError } from '../reducers';
 import { State } from '../reducers/types';
 import { Cryptocurrency, Converter } from '../types';
-import ListEmpty from '../components/ListEmpty';
+import ListEmpty, { ListError } from '../components/ListEmpty';
 import CryptocurrencyItem from '../components/CryptocurrencyItem';
-import { Toast } from 'native-base';
 import { translate } from '../Localize';
 import Theme from '../styles/Theme';
 
@@ -39,29 +38,16 @@ export class Cryptocurrencies extends React.Component<Props> {
         this.props.fetchCryptoCurrencies();
     }
 
-    componentWillReceiveProps(nextProps: Props) {
-        const { currencies } = this.props
-        if (!nextProps.isLoading && nextProps.error && currencies.length === 0) {
-            Toast.show({
-                text: translate("error"),
-                duration: 10000,
-                buttonText: translate("tryAgain"),
-                onClose: ((reason) => {
-                    if (reason === "user") {
-                        this.props.fetchCryptoCurrencies()
-                    }
-                })
-            })
-        }
-    }
-
     render() {
-        const { isLoading, currencies, fetchCryptoCurrencies } = this.props
+        const { isLoading, error, currencies, fetchCryptoCurrencies } = this.props
 
         return (
             <Wrapper>
                 <List
-                    ListEmptyComponent={ <ListEmpty message={translate('emptyList')} /> }
+                    ListEmptyComponent={!isLoading && error ?
+                        <ListError message={translate('error')} /> :
+                        <ListEmpty message={translate('emptyList')} />
+                    }
                     refreshing={isLoading}
                     data={currencies}
                     //@ts-ignore
