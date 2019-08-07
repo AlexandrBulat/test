@@ -8,26 +8,26 @@ import {
 import { of, timer } from 'rxjs'
 import { Epic, ofType } from "redux-observable";
 import {
-    fetchCryptocurrenciesFulfilled,
-    fetchCryptocurrenciesFailed
+    fetchMoviesFulfilled,
+    fetchMoviesFailed
 } from '../actions';
 import { NormalizedObject } from '../reducers/types';
-import { Cryptocurrency } from '../types';
+import { Movie } from '../types';
 import { IDependencies } from '.';
 
-export const fecthCryptocurrencies: Epic = (action$, _, { apiService }: IDependencies) => {
+export const fecthMovies: Epic = (action$, _, { apiService }: IDependencies) => {
     const stopPolling$ = action$.pipe(
-        ofType(TypeKeys.CRYPTOCURRENCIES_FETCH_STOP)
+        ofType(TypeKeys.MOVIES_FETCH_STOP)
     )
     return action$.pipe(
-        ofType(TypeKeys.CRYPTOCURRENCIES_FETCH),
+        ofType(TypeKeys.MOVIES_FETCH),
         switchMap(() => {
             return timer(0, 60 * 1000).pipe(
                 takeUntil(stopPolling$),
                 switchMap(() => {
-                    return apiService.getCryptocurrencies().pipe(
-                        map((cryptocurrencies: NormalizedObject<Cryptocurrency>) => fetchCryptocurrenciesFulfilled(cryptocurrencies)),
-                        catchError((error: Error) => of(fetchCryptocurrenciesFailed(error)))
+                    return apiService.getMovies().pipe(
+                        map((cryptocurrencies: NormalizedObject<Movie>) => fetchMoviesFulfilled(cryptocurrencies)),
+                        catchError((error: Error) => of(fetchMoviesFailed(error)))
                     )
                 })
             )

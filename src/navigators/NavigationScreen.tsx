@@ -1,5 +1,5 @@
 const NavigationScreen = {
-    CRYPTOCURRENCIES: 'CRYPTOCURRENCIES',
+    MOVIES: 'MOVIES',
 }
 
 export default NavigationScreen

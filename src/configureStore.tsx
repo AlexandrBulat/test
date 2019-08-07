@@ -22,7 +22,7 @@ const persistConfig = {
         }
       },
       state => state,
-      { whitelist: ['cryptocurrencies'] }
+      { whitelist: ['movies'] }
     ),
   ],
 }

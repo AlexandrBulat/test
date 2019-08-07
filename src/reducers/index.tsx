@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux'
-import { Cryptocurrency } from '../types';
+import { Movie } from '../types';
 import { State } from './types';
-import cryptocurrencies, * as fromCrypto from './cryptocurrencies'
+import movies, * as fromMovie from './movies'
 
 const reducers = combineReducers<State>({
-   cryptocurrencies
+   movies
 })
 
-export const getCryptocurrencies = (state: State): Cryptocurrency[] => 
-   fromCrypto.getCryptocurrencies(state.cryptocurrencies)
-export const isLoading = (state: State): boolean => fromCrypto.isLoading(state.cryptocurrencies)
-export const getError = (state: State): Error | undefined => fromCrypto.getError(state.cryptocurrencies)
+export const getMovies = (state: State): Movie[] =>
+   fromMovie.getMovies(state.movies)
+export const isLoading = (state: State): boolean => fromMovie.isLoading(state.movies)
+export const getError = (state: State): Error | null => fromMovie.getError(state.movies)
 
 export default reducers

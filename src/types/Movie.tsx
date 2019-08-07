@@ -3,7 +3,7 @@ export enum Converter {
     BTC = "BTC"
 }
 
-export interface Cryptocurrency {
+export interface Movie {
     readonly id: number
     readonly name: string
     readonly symbol: string

@@ -1,12 +1,12 @@
 import {
-    CryptocurrenciesFetchAction,
-    CryptocurrenciesFetchFulfilledAction,
-    CryptocurrenciesFetchFailedAction
-} from "./cryptocurrencies";
+    MoviesFetchAction,
+    MoviesFetchFulfilledAction,
+    MoviesFetchFailedAction
+} from "./movies";
 
-export * from "./cryptocurrencies";
+export * from "./movies";
 
 export type ActionTypes =
-    | CryptocurrenciesFetchAction
-    | CryptocurrenciesFetchFulfilledAction
-    | CryptocurrenciesFetchFailedAction
+    | MoviesFetchAction
+    | MoviesFetchFulfilledAction
+    | MoviesFetchFailedAction

@@ -1,1 +1,1 @@
-export * from './Cryptocurrency'
+export * from './Movie'

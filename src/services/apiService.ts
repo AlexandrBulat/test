@@ -2,15 +2,15 @@ import { Observable, of } from "rxjs";
 import { from } from 'rxjs'
 import { AxiosInstance } from 'axios';
 import { NormalizedObject } from "../reducers/types";
-import { Cryptocurrency } from "../types";
+import { Movie } from "../types";
 import { map, switchMap } from "rxjs/operators";
 import { normalize } from 'normalizr'
-import { cryptocurrenciesSchema } from "./schema";
+import { moviesSchema } from "./schema";
 import { Constants } from "../constants/Constants";
 import ApiError from "../errors/ApiError";
 
 export interface IApiService {
-    getCryptocurrencies(): Observable<NormalizedObject<Cryptocurrency>>;
+    getMovies(): Observable<NormalizedObject<Movie>>;
 }
 
 type Status = {
@@ -25,7 +25,7 @@ export class ApiService implements IApiService {
         this.axios = axios;
     }
 
-    public getCryptocurrencies(): Observable<NormalizedObject<Cryptocurrency>> {
+    public getMovies(): Observable<NormalizedObject<Movie>> {
         return from(this.axios.get(`cryptocurrency/listings/latest?limit=${Constants.CMC_FETCH_SIZE}`)).pipe(
             switchMap((result) => {
                 const status: Status = result.data.status
@@ -34,10 +34,10 @@ export class ApiService implements IApiService {
                     of(result)
             }),
             map((result) => {
-                const normalizedCryptocurrencies = normalize(result.data.data, cryptocurrenciesSchema)
+                const normalizedMovies = normalize(result.data.data, moviesSchema)
                 return {
-                    byIds: normalizedCryptocurrencies.entities.cryptocurrencies || {},
-                    ids: normalizedCryptocurrencies.result || []
+                    byIds: normalizedMovies.entities.movies || {},
+                    ids: normalizedMovies.result || []
                 }
             })
         )

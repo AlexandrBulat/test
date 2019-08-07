@@ -1,11 +1,11 @@
 import { NormalizedObject } from "./NormalizedObject";
-import { Cryptocurrency } from "../../types";
+import { Movie } from "../../types";
 
 export interface State {
-   cryptocurrencies: CryptocurrenciesState
+   movies: MoviesState
 }
 
-export interface CryptocurrenciesState extends NormalizedObject<Cryptocurrency> {
+export interface MoviesState extends NormalizedObject<Movie> {
    loading: boolean
    error: Error | null
 }

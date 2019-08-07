@@ -1,4 +1,4 @@
-package com.crypto;
+package com.movies;
 
 import android.app.Application;
 import android.util.Log;

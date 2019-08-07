@@ -1,9 +1,9 @@
 import { combineEpics } from 'redux-observable';
-import { fecthCryptocurrencies } from './cryptocurrencies';
+import { fecthMovies } from './movies';
 import { IApiService } from '../services';
 
 export default combineEpics(
-    fecthCryptocurrencies
+    fecthMovies
 );
 
 export interface IDependencies {

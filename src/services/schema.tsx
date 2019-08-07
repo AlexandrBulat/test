@@ -1,8 +1,8 @@
 import { schema } from 'normalizr';
 
-export const cryptocurrencies = new schema.Entity('cryptocurrencies', {}, {
+export const movies = new schema.Entity('movies', {}, {
     idAttribute: 'id'
 });
 
-export const cryptocurrenciesSchema = [cryptocurrencies]
+export const moviesSchema = [movies]
 
