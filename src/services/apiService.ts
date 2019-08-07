@@ -1,6 +1,5 @@
 import { Observable, of } from "rxjs";
-import { from } from 'rxjs'
-import { AxiosInstance } from 'axios';
+import { ajax } from 'rxjs/ajax';
 import { NormalizedObject } from "../reducers/types";
 import { Movie } from "../types";
 import { map, switchMap } from "rxjs/operators";
@@ -19,27 +18,23 @@ type Status = {
 }
 
 export class ApiService implements IApiService {
-    protected axios: AxiosInstance;
-
-    constructor(axios: AxiosInstance) {
-        this.axios = axios;
-    }
 
     public getMovies(): Observable<NormalizedObject<Movie>> {
-        return from(this.axios.get(`cryptocurrency/listings/latest?limit=${Constants.CMC_FETCH_SIZE}`)).pipe(
-            switchMap((result) => {
-                const status: Status = result.data.status
-                return status.errorCode ?
-                    Observable.throw(new ApiError(status.errorCode, status.errorMessage)) :
-                    of(result)
-            }),
-            map((result) => {
-                const normalizedMovies = normalize(result.data.data, moviesSchema)
-                return {
-                    byIds: normalizedMovies.entities.movies || {},
-                    ids: normalizedMovies.result || []
-                }
-            })
-        )
+        return ajax.get(`${Constants.BASE_URL}/movies/get-popular-movies?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
+            .pipe(
+                switchMap((result) => {
+                    const status: Status = result.data.status
+                    return status.errorCode ?
+                        Observable.throw(new ApiError(status.errorCode, status.errorMessage)) :
+                        of(result)
+                }),
+                map((result) => {
+                    const normalizedMovies = normalize(result.data.data, moviesSchema)
+                    return {
+                        byIds: normalizedMovies.entities.movies || {},
+                        ids: normalizedMovies.result || []
+                    }
+                })
+            )
     }
 }
