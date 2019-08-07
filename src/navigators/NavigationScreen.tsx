@@ -1,5 +1,5 @@
 const NavigationScreen = {
-    MOVIES: 'MOVIES',
+    LANDING: 'LANDING',
 }
 
 export default NavigationScreen

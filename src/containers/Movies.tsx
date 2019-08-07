@@ -1,39 +1,51 @@
 import React from 'react';
-import { FlatList, Platform } from 'react-native';
+import { FlatList, Platform, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import styled from 'styled-components/native'
 import { fetchMovies } from '../actions';
 import { getMovies, isLoading, getError } from '../reducers';
 import { State } from '../reducers/types';
-import { Movie, Converter } from '../types';
+import { Movie } from '../types';
 import ListEmpty, { ListError } from '../components/ListEmpty';
 import CryptocurrencyItem from '../components/MovieItem';
-import { translate } from '../Localize';
 import Theme from '../styles/Theme';
 
 interface Props {
     readonly fetchCryptoCurrencies: typeof fetchMovies,
     readonly currencies: Movie[],
     readonly isLoading: boolean,
-    readonly error?: Error
+    readonly error?: Error,
+    readonly title:string
 };
 
 export const Wrapper = styled.ScrollView.attrs(({ background }: any): any => ({
     keyboardDismissMode: Platform.OS == 'ios' ? "on-drag" : "none",
     bounces: false,
     contentContainerStyle: {
-        flexGrow: 1
+        flexGrow: 1,
+        backgroundColor: Theme.color.black
     }
 }))`
 `
 
 export const List = styled(FlatList).attrs({
     contentContainerStyle: {
-        flexGrow: 1,
-        backgroundColor: Theme.color.grey50
+        height: 210,
+        paddingTop: 15,
+        paddingBottom: 15,
     }
 })`
+`
+
+const Title = styled.Text`
+    font-size: 16px;
+    margin-left: 16px;
+    margin-top: 10
+    color: ${Theme.color.white};
+    font-style: normal;
+    font-weight: bold;
+    flex-wrap: wrap;
 `
 
 //TODO Test
@@ -44,68 +56,29 @@ export class Cryptocurrencies extends React.Component<Props> {
     }
 
     render() {
-        const { isLoading, error, currencies, fetchCryptoCurrencies } = this.props
+        const { isLoading, error, currencies, fetchCryptoCurrencies ,title } = this.props
 
         return (
-            <Wrapper>
+            <View>
+                <Title numberOfLines={1} >{title}</Title>
                 <List
                     horizontal
                     ListEmptyComponent={!isLoading && error ?
-                        <ListError message={translate('error')} /> :
-                        <ListEmpty message={translate('emptyList')} />
+                        <ListError message={'error'} /> :
+                        <ListEmpty message={'emptyList'} />
                     }
-                    refreshing={isLoading}
                     data={currencies}
                     //@ts-ignore
                     keyExtractor={(item: Movie) => `${item.id}`}
                     //@ts-ignore
                     renderItem={({ item }: { item: Movie }) => this.renderItem(item)}
-                    onRefresh={fetchCryptoCurrencies}
                 />
-                <List
-                    horizontal
-                    ListEmptyComponent={!isLoading && error ?
-                        <ListError message={translate('error')} /> :
-                        <ListEmpty message={translate('emptyList')} />
-                    }
-                    refreshing={isLoading}
-                    data={currencies}
-                    //@ts-ignore
-                    keyExtractor={(item: Movie) => `${item.id}`}
-                    //@ts-ignore
-                    renderItem={({ item }: { item: Movie }) => this.renderItem(item)}
-                    onRefresh={fetchCryptoCurrencies}
-                />
-                <List
-                    horizontal
-                    ListEmptyComponent={!isLoading && error ?
-                        <ListError message={translate('error')} /> :
-                        <ListEmpty message={translate('emptyList')} />
-                    }
-                    refreshing={isLoading}
-                    data={currencies}
-                    //@ts-ignore
-                    keyExtractor={(item: Movie) => `${item.id}`}
-                    //@ts-ignore
-                    renderItem={({ item }: { item: Movie }) => this.renderItem(item)}
-                    onRefresh={fetchCryptoCurrencies}
-                />
-            </Wrapper>
+            </View>
         );
     }
 
     private renderItem(item: Movie) {
-        const quote = item.quote[Converter.USD]!!;
-        return (<CryptocurrencyItem
-            name={item.name}
-            symbol={item.symbol}
-            cmcRank={item.cmcRank}
-            price={quote.price}
-            volume24h={quote.volume24h}
-            percentChange1h={quote.percentChange1h}
-            percentChange24h={quote.percentChange24h}
-            percentChange7d={quote.percentChange7d}
-            marketCap={quote.marketCap} />);
+        return (<CryptocurrencyItem movie={item} />);
     }
 }
 

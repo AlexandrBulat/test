@@ -20,16 +20,16 @@ type Status = {
 export class ApiService implements IApiService {
 
     public getMovies(): Observable<NormalizedObject<Movie>> {
-        return ajax.get(`${Constants.BASE_URL}/movies/get-popular-movies?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
+        return ajax.get(`${Constants.BASE_URL}/movie/popular?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
             .pipe(
                 switchMap((result) => {
-                    const status: Status = result.data.status
-                    return status.errorCode ?
-                        Observable.throw(new ApiError(status.errorCode, status.errorMessage)) :
+                    const status: Status = result.response
+                    return status.status_code ?
+                        Observable.throw(new ApiError(status.status_code, status.status_message)) :
                         of(result)
                 }),
                 map((result) => {
-                    const normalizedMovies = normalize(result.data.data, moviesSchema)
+                    const normalizedMovies = normalize(result.response.results, moviesSchema)
                     return {
                         byIds: normalizedMovies.entities.movies || {},
                         ids: normalizedMovies.result || []
