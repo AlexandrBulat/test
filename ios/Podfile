@@ -28,7 +28,6 @@ target 'movies' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNLocalize', :path => '../node_modules/react-native-localize'
 
   target 'moviesTests' do
     inherit! :search_paths

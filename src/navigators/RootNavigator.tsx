@@ -1,23 +1,23 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation'
-import Cryptocurrencies from '../containers/Movies';
 import NavigationScreen from './NavigationScreen';
+import { Landing } from '../containers/Landing';
 
 const MoviesNavigator = createStackNavigator({
-  [NavigationScreen.MOVIES]: {
-    screen: Cryptocurrencies,
+  [NavigationScreen.LANDING]: {
+    screen: Landing,
     navigationOptions: {
       headerTitle: 'Movies'
     }
   },
-  initialRouteName: NavigationScreen.MOVIES,
+  initialRouteName: NavigationScreen.LANDING,
 });
 
 const AppNavigator = createSwitchNavigator(
   {
-    [NavigationScreen.MOVIES]: MoviesNavigator,
+    [NavigationScreen.LANDING]: MoviesNavigator,
   },
   {
-    initialRouteName: NavigationScreen.MOVIES,
+    initialRouteName: NavigationScreen.LANDING,
   },
 )
 
