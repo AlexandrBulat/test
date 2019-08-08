@@ -1,7 +1,8 @@
 import { Movie } from "../../types";
 
 export interface State {
-   movies: MoviesState
+   movies: MoviesState,
+   movie: MovieState
 }
 
 export interface MoviesState {
@@ -11,4 +12,10 @@ export interface MoviesState {
       [key: number]: Movie
    }
    ids: { [id: string]: number[] }
+}
+
+export interface MovieState {
+   loading: boolean
+   error: Error | null
+   movie: Movie | null
 }

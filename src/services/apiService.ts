@@ -20,10 +20,31 @@ export enum MovieCategory {
 
 export interface IApiService {
     getMovies(category: MovieCategory): Observable<NormalizedObject<Movie>>;
+
+    getMovie(movieId: number): Observable<Movie>;
 }
 
-
 export class ApiService implements IApiService {
+    getMovie(movieId: number): Observable<Movie> {
+        return ajax.get(`${Constants.BASE_URL}/movie/${movieId}?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
+            .pipe(
+                switchMap((result) => {
+                    const response: Status & any = result.response as Status
+                    return response.status_code ?
+                        Observable.throw(new ApiError(response.status_code, response.status_message)) :
+                        of(({
+                            id: response.id,
+                            posterPath: response.poster_path,
+                            title: response.title,
+                            overview: response.overview,
+                            releaseDate: response.release_date,
+                            voteAverage: response.vote_average,
+                            runtime: response.runtime,
+                            genres: response.genres,
+                        }))
+                }),
+            )
+    }
 
     public getMovies(category: MovieCategory): Observable<NormalizedObject<Movie>> {
         return ajax.get(`${Constants.BASE_URL}/movie/${category}?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)

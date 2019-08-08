@@ -1,9 +1,10 @@
 import { combineEpics } from 'redux-observable';
-import { fecthMovies } from './movies';
+import { fecthMovies, fecthMovie } from './movies';
 import { IApiService } from '../services';
 
 export default combineEpics(
-    fecthMovies
+    fecthMovies,
+    fecthMovie
 );
 
 export interface IDependencies {

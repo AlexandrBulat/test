@@ -8,7 +8,10 @@ import { of, zip } from 'rxjs'
 import { Epic, ofType } from "redux-observable";
 import {
     fetchMoviesFulfilled,
-    fetchMoviesFailed
+    fetchMoviesFailed,
+    MovieFetchAction,
+    fetchMovieFulfilled,
+    fetchMovieFailed
 } from '../actions';
 import { NormalizedObject } from '../reducers/types';
 import { Movie } from '../types';
@@ -34,6 +37,18 @@ export const fecthMovies: Epic = (action$, _, { apiService }: IDependencies) => 
                         upcoming.ids)
                 }),
                 catchError((error: Error) => of(fetchMoviesFailed(error)))
+            )
+        })
+    )
+}
+
+export const fecthMovie: Epic = (action$, _, { apiService }: IDependencies) => {
+    return action$.pipe(
+        ofType(TypeKeys.MOVIE_FETCH),
+        switchMap((action: MovieFetchAction) => {
+            return apiService.getMovie(action.id).pipe(
+                map((movie: Movie) => fetchMovieFulfilled(movie)),
+                catchError((error: Error) => of(fetchMovieFailed(error)))
             )
         })
     )

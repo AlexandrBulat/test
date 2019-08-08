@@ -1,6 +1,5 @@
 import { TypeKeys } from "../constants/TypeKeys";
 import { Action } from "redux";
-import { NormalizedObject } from "../reducers/types";
 import { Movie } from "../types";
 
 export interface MoviesFetchAction extends Action {

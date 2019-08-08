@@ -15,8 +15,11 @@ import MovieItem from '../components/MovieItem';
 import Theme from '../styles/Theme';
 import { MovieCategory } from '../services';
 import ListError from '../components/ListError';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import NavigationScreen from '../navigators/NavigationScreen';
 
 interface Props {
+    readonly navigation: NavigationScreenProp<NavigationState>,
     readonly fetchMovies: typeof fetchMovies,
     readonly popularMovies: Movie[],
     readonly topMovies: Movie[],
@@ -70,6 +73,10 @@ const POPULAR_HEIGHT = window.height / 2;
 //TODO Test
 export class Movies extends React.Component<Props> {
 
+    handleTap(movieId: number): void {
+        this.props.navigation.push(NavigationScreen.DETAILS,{movieId})
+    }
+
     componentDidMount() {
         this.props.fetchMovies();
     }
@@ -80,35 +87,35 @@ export class Movies extends React.Component<Props> {
         return (
             <SafeArea>
                 <Wrapper>
-                {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
-                {error && <ListError message={"An error occured!"}/>}
+                    {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
+                    {error && <ListError message={"An error occured!"} />}
 
-                <Header>{'Popular'}</Header>
-                <List
-                    horizontal
-                    ItemSeparatorComponent={() => <Space />}
-                    data={popularMovies}
-                    keyExtractor={(item) => `${item.id}`}
-                    renderItem={({ item }: { item: Movie }) => this.renderItem(item, POPULAR_WIDTH, POPULAR_HEIGHT)}
-                />
-                <Header>{'Top'}</Header>
-                <List
-                    horizontal
-                    ItemSeparatorComponent={() => <Space />}
-                    data={topMovies}
-                    keyExtractor={(item) => `${item.id}`}
-                    renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
-                />
-                <Header>{'Upcoming'}</Header>
-                <List
-                    horizontal
-                    ItemSeparatorComponent={() => <Space />}
-                    data={upcomingMovies}
-                    keyExtractor={(item) => `${item.id}`}
-                    renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
-                />
-           </Wrapper>
-           </SafeArea>
+                    <Header>{'Popular'}</Header>
+                    <List
+                        horizontal
+                        ItemSeparatorComponent={() => <Space />}
+                        data={popularMovies}
+                        keyExtractor={(item) => `${item.id}`}
+                        renderItem={({ item }: { item: Movie }) => this.renderItem(item, POPULAR_WIDTH, POPULAR_HEIGHT)}
+                    />
+                    <Header>{'Top'}</Header>
+                    <List
+                        horizontal
+                        ItemSeparatorComponent={() => <Space />}
+                        data={topMovies}
+                        keyExtractor={(item) => `${item.id}`}
+                        renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
+                    />
+                    <Header>{'Upcoming'}</Header>
+                    <List
+                        horizontal
+                        ItemSeparatorComponent={() => <Space />}
+                        data={upcomingMovies}
+                        keyExtractor={(item) => `${item.id}`}
+                        renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
+                    />
+                </Wrapper>
+            </SafeArea>
         );
     }
 
@@ -117,6 +124,7 @@ export class Movies extends React.Component<Props> {
             source={item.posterPath}
             width={width}
             height={height}
+            onPress={() => this.handleTap(item.id)}
         />)
 }
 
