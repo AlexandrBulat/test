@@ -26,7 +26,9 @@ export const fecthMovies: Epic = (action$, _, { apiService }: IDependencies) => 
             const topRequest = apiService.getMovies(MovieCategory.Top)
             const upcomingRequest = apiService.getMovies(MovieCategory.Upcoming)
             return zip(popularRequest, topRequest, upcomingRequest).pipe(
-                map((movies: [NormalizedObject<Movie>, NormalizedObject<Movie>, NormalizedObject<Movie>]) => {
+                map((movies: [NormalizedObject<Movie>,
+                    NormalizedObject<Movie>,
+                    NormalizedObject<Movie>]) => {
                     const popular = movies[0]
                     const top = movies[1]
                     const upcoming = movies[2]

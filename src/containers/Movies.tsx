@@ -17,6 +17,7 @@ import { MovieCategory } from '../services';
 import ListError from '../components/ListError';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import NavigationScreen from '../navigators/NavigationScreen';
+import SafeArea from '../components/SafeArea';
 
 interface Props {
     readonly navigation: NavigationScreenProp<NavigationState>,
@@ -57,11 +58,6 @@ const Header = styled.Text`
 
 const Space = styled.View`
     width: 10px;
-`
-
-const SafeArea = styled.SafeAreaView`
-    flex: 1;
-    background-color: ${Theme.color.black};
 `
 
 const window = Dimensions.get('window');

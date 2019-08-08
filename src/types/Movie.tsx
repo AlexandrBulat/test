@@ -8,3 +8,12 @@ export interface Movie {
     readonly runtime?: number
     readonly genres: string[]
 }
+
+export enum Fields {
+    Title = "title",
+    Overview = "overview",
+    ReleaseDate = "releaseDate",
+    VoteAverage = "voteAverage",
+    Runtime = "runtime",
+    Genres = "genres"
+}

@@ -9,16 +9,17 @@ import styled from 'styled-components/native'
 import { fetchMovie } from '../actions';
 import { isLoading, getError, getMovie } from '../reducers';
 import { State } from '../reducers/types';
-import { Movie } from '../types';
 import Theme from '../styles/Theme';
 import ListError from '../components/ListError';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import MovieDetailsItem from '../components/MovieDetailsItem';
+import SafeArea from '../components/SafeArea';
+import { Fields } from '../types';
 
 interface Props {
     readonly navigation: NavigationScreenProp<NavigationState>,
     readonly fetchMovie: typeof fetchMovie,
-    readonly movie: Movie | null,
+    readonly entries: [string, any][],
     readonly isLoading: boolean,
     readonly error: Error | null,
 };
@@ -31,7 +32,7 @@ export const Wrapper = styled.ScrollView.attrs({
 })`
 `
 
-export const List = styled(FlatList as new () => FlatList<any>).attrs({
+export const List = styled(FlatList as new () => FlatList<[string, any]>).attrs({
     contentContainerStyle: {
         paddingTop: 10,
         paddingBottom: 15,
@@ -45,11 +46,6 @@ const Divider = styled.View`
     background-color: ${Theme.color.white};
 `
 
-const SafeArea = styled.SafeAreaView`
-    flex: 1;
-    background-color: ${Theme.color.black};
-`
-
 //TODO Test
 export class MovieDetails extends React.Component<Props> {
 
@@ -58,7 +54,7 @@ export class MovieDetails extends React.Component<Props> {
     }
 
     render() {
-        const { isLoading, error, movie } = this.props
+        const { isLoading, error, entries } = this.props
 
         return (
             <SafeArea>
@@ -67,25 +63,51 @@ export class MovieDetails extends React.Component<Props> {
                     {error && <ListError message={"An error occured!"} />}
                     <List
                         ItemSeparatorComponent={() => <Divider />}
-                        data={Object.entries(movie || {})}
-                        keyExtractor={(item) => `${item.id}`}
-                        renderItem={({ item }: { item: Movie }) => this.renderItem(item)}
+                        data={entries}
+                        keyExtractor={(item) => `${item[0]}`}
+                        renderItem={({ item }: { item: [string, any] }) => this.renderItem(item)}
                     />
                 </Wrapper>
             </SafeArea>
         );
     }
 
-    private renderItem = (item: any[]) =>
-        (<MovieDetailsItem
-            title={item[0]}
+    private renderItem = (item: [string, any]) => {
+        let title = '', subtitle = '';
+        const key = item[0];
+        const value = item[1];
+        if (key === Fields.Title){
+            title = 'Title'
+            subtitle = value
+        } else if (key === Fields.Overview){
+            title = 'Overview'
+            subtitle = value
+        } else if (key === Fields.ReleaseDate){
+            title = 'Date'
+            subtitle = value
+        } else if (key === Fields.VoteAverage){
+            title = 'Rating'
+            subtitle = value
+        }  else if (key === Fields.Runtime){
+            title = 'Duration'
+            subtitle = `${value} min`
+        } else if (key === Fields.Genres){
+            title = 'Genres'
+            subtitle = (value || []).map((genre: {name: string}) => genre.name).join(', ')
+        }
+
+        return (<MovieDetailsItem
+            title={title}
+            subtitle={subtitle}
         />)
+    }
 }
 
 const mapStateToProps = (state: State, ownProps: Props) => {
     const movieId = ownProps.navigation.getParam('movieId');
+    const movie = getMovie(state, movieId)
     return {
-        movie: getMovie(state, movieId),
+        entries: Object.entries(movie || {}).filter(entry => entry[0] !== 'id' && entry[0] !== 'posterPath'),
         isLoading: isLoading(state),
         error: getError(state)
     }
