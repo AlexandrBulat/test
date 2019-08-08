@@ -1,10 +1,10 @@
 import { createStackNavigator, createSwitchNavigator } from 'react-navigation'
 import NavigationScreen from './NavigationScreen';
-import { Landing } from '../containers/Landing';
+import Movies from '../containers/Movies';
 
 const MoviesNavigator = createStackNavigator({
   [NavigationScreen.LANDING]: {
-    screen: Landing,
+    screen: Movies,
     navigationOptions: {
       header: null
     }

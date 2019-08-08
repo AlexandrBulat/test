@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     FlatList,
-    View,
     Dimensions,
     ActivityIndicator
 } from 'react-native';
@@ -15,6 +14,7 @@ import { Movie } from '../types';
 import MovieItem from '../components/MovieItem';
 import Theme from '../styles/Theme';
 import { MovieCategory } from '../services';
+import ListError from '../components/ListError';
 
 interface Props {
     readonly fetchMovies: typeof fetchMovies,
@@ -56,6 +56,11 @@ const Space = styled.View`
     width: 10px;
 `
 
+const SafeArea = styled.SafeAreaView`
+    flex: 1;
+    background-color: ${Theme.color.black};
+`
+
 const window = Dimensions.get('window');
 const WIDTH = window.width / 2;
 const HEIGHT = window.height / 4;
@@ -73,8 +78,10 @@ export class Movies extends React.Component<Props> {
         const { isLoading, error, popularMovies, topMovies, upcomingMovies } = this.props
 
         return (
-            <View>
+            <SafeArea>
+                <Wrapper>
                 {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
+                {error && <ListError message={"An error occured!"}/>}
 
                 <Header>{'Popular'}</Header>
                 <List
@@ -100,7 +107,8 @@ export class Movies extends React.Component<Props> {
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
                 />
-            </View>
+           </Wrapper>
+           </SafeArea>
         );
     }
 
