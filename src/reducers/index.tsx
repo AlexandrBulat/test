@@ -7,8 +7,7 @@ const reducers = combineReducers<State>({
    movies
 })
 
-export const getMovies = (state: State): Movie[] =>
-   fromMovie.getMovies(state.movies)
+export const getMovies = (state: State): Movie[] => fromMovie.getMovies(state.movies)
 export const isLoading = (state: State): boolean => fromMovie.isLoading(state.movies)
 export const getError = (state: State): Error | null => fromMovie.getError(state.movies)
 

@@ -1,39 +1,46 @@
 import React from 'react';
-import { FlatList, Platform } from 'react-native';
-import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import styled from 'styled-components/native'
-import { fetchMovies } from '../actions';
-import { getMovies, isLoading, getError } from '../reducers';
-import { State } from '../reducers/types';
-import { Movie } from '../types';
 import Theme from '../styles/Theme';
 import Movies from './Movies';
+import { Dimensions, TouchableWithoutFeedback } from 'react-native';
 
 interface Props {
-    readonly fetchCryptoCurrencies: typeof fetchMovies,
-    readonly currencies: Movie[],
-    readonly isLoading: boolean,
-    readonly error?: Error
 };
 
-export const Wrapper = styled.ScrollView.attrs(({ background }: any): any => ({
-    keyboardDismissMode: Platform.OS == 'ios' ? "on-drag" : "none",
-    bounces: false,
+const Wrapper = styled.ScrollView.attrs({
     contentContainerStyle: {
         flexGrow: 1,
         backgroundColor: Theme.color.black
     }
-}))`
+})`
+`
+
+const SafeArea = styled.SafeAreaView`
+    flex: 1;
+    background-color: #000000;
+`
+
+const PopularWrapper = styled.View`
+    height: ${Dimensions.get('window').height / 2};
+    background-color: #000000;
 `
 
 export class Landing extends React.Component<Props> {
 
     render() {
+
         return (
-            <Wrapper>
-                <Movies title={"Popular"} />
-            </Wrapper>
+            <SafeArea>
+                <Wrapper>
+                    {/* <PopularWrapper> */}
+                        <Movies title={"Popular"} />
+                    {/* </PopularWrapper> */}
+                    {/* <TouchableWithoutFeedback>
+                    <Movies title={"Top"} />
+                    </TouchableWithoutFeedback>
+                    <Movies title={"Upcoming"} /> */}
+                </Wrapper>
+            </SafeArea>
         );
     }
 }
