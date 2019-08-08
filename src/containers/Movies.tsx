@@ -70,7 +70,7 @@ const POPULAR_HEIGHT = window.height / 2;
 export class Movies extends React.Component<Props> {
 
     handleTap(movieId: number): void {
-        this.props.navigation.push(NavigationScreen.DETAILS,{movieId})
+        this.props.navigation.push(NavigationScreen.DETAILS, { movieId })
     }
 
     componentDidMount() {
