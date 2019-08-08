@@ -8,8 +8,13 @@ export interface MoviesFetchAction extends Action {
 }
 
 export interface MoviesFetchFulfilledAction extends Action {
-    type: TypeKeys. MOVIES_FETCH_FULFILLED;
-    movies: NormalizedObject<Movie>
+    type: TypeKeys.MOVIES_FETCH_FULFILLED;
+    byIds: {
+        [key: number]: Movie
+    }
+    popularIds: number[]
+    topRatedIds: number[]
+    upcomingIds: number[]
 }
 
 export interface MoviesFetchFailedAction extends Action {
@@ -21,10 +26,17 @@ export const fetchMovies = (): MoviesFetchAction => ({
     type: TypeKeys.MOVIES_FETCH
 });
 
-export const fetchMoviesFulfilled = (movies: NormalizedObject<Movie>): MoviesFetchFulfilledAction => ({
-    type: TypeKeys. MOVIES_FETCH_FULFILLED,
-    movies
-});
+export const fetchMoviesFulfilled = (
+    byIds: { [key: number]: Movie },
+    popularIds: number[],
+    topRatedIds: number[],
+    upcomingIds: number[]): MoviesFetchFulfilledAction => ({
+        type: TypeKeys.MOVIES_FETCH_FULFILLED,
+        byIds,
+        popularIds,
+        topRatedIds,
+        upcomingIds
+    });
 
 export const fetchMoviesFailed = (error: Error): MoviesFetchFailedAction => ({
     type: TypeKeys.MOVIES_FETCH_FAILED,

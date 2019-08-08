@@ -3,9 +3,8 @@ import {
     catchError,
     map,
     switchMap,
-    takeUntil
 } from 'rxjs/operators'
-import { of, timer } from 'rxjs'
+import { of, zip } from 'rxjs'
 import { Epic, ofType } from "redux-observable";
 import {
     fetchMoviesFulfilled,
@@ -14,26 +13,28 @@ import {
 import { NormalizedObject } from '../reducers/types';
 import { Movie } from '../types';
 import { IDependencies } from '.';
+import { MovieCategory } from '../services';
 
 export const fecthMovies: Epic = (action$, _, { apiService }: IDependencies) => {
-    const stopPolling$ = action$.pipe(
-        ofType(TypeKeys.MOVIES_FETCH_STOP)
-    )
     return action$.pipe(
         ofType(TypeKeys.MOVIES_FETCH),
         switchMap(() => {
-            return timer(0, 60 * 1000).pipe(
-                takeUntil(stopPolling$),
-                switchMap(() => {
-                    return apiService.getMovies().pipe(
-                        map((cryptocurrencies: NormalizedObject<Movie>) => fetchMoviesFulfilled(cryptocurrencies)),
-                        catchError((error: Error) => of(fetchMoviesFailed(error)))
-                    )
-                })
+            const popularRequest = apiService.getMovies(MovieCategory.Popular)
+            const topRequest = apiService.getMovies(MovieCategory.Top)
+            const upcomingRequest = apiService.getMovies(MovieCategory.Upcoming)
+            return zip(popularRequest, topRequest, upcomingRequest).pipe(
+                map((movies: [NormalizedObject<Movie>, NormalizedObject<Movie>, NormalizedObject<Movie>]) => {
+                    const popular = movies[0]
+                    const top = movies[1]
+                    const upcoming = movies[2]
+                    return fetchMoviesFulfilled(
+                        { ...popular.byIds, ...top.byIds, ...upcoming.byIds },
+                        popular.ids,
+                        top.ids,
+                        upcoming.ids)
+                }),
+                catchError((error: Error) => of(fetchMoviesFailed(error)))
             )
         })
     )
 }
-
-
-

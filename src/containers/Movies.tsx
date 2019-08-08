@@ -1,18 +1,26 @@
 import React from 'react';
-import { FlatList, View, Dimensions } from 'react-native';
+import {
+    FlatList,
+    View,
+    Dimensions,
+    ActivityIndicator
+} from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import styled from 'styled-components/native'
 import { fetchMovies } from '../actions';
-import { getMovies, isLoading, getError } from '../reducers';
+import { makeGetMovies, isLoading, getError } from '../reducers';
 import { State } from '../reducers/types';
 import { Movie } from '../types';
-import CryptocurrencyItem from '../components/MovieItem';
+import MovieItem from '../components/MovieItem';
 import Theme from '../styles/Theme';
+import { MovieCategory } from '../services';
 
 interface Props {
     readonly fetchMovies: typeof fetchMovies,
-    readonly movies: Movie[],
+    readonly popularMovies: Movie[],
+    readonly topMovies: Movie[],
+    readonly upcomingMovies: Movie[],
     readonly isLoading: boolean,
     readonly error: Error | null,
 };
@@ -62,15 +70,17 @@ export class Movies extends React.Component<Props> {
     }
 
     render() {
-        const { isLoading, error, movies } = this.props
+        const { isLoading, error, popularMovies, topMovies, upcomingMovies } = this.props
 
         return (
             <View>
+                {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
+
                 <Header>{'Popular'}</Header>
                 <List
                     horizontal
                     ItemSeparatorComponent={() => <Space />}
-                    data={movies}
+                    data={popularMovies}
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item }: { item: Movie }) => this.renderItem(item, POPULAR_WIDTH, POPULAR_HEIGHT)}
                 />
@@ -78,7 +88,7 @@ export class Movies extends React.Component<Props> {
                 <List
                     horizontal
                     ItemSeparatorComponent={() => <Space />}
-                    data={movies}
+                    data={topMovies}
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
                 />
@@ -86,7 +96,7 @@ export class Movies extends React.Component<Props> {
                 <List
                     horizontal
                     ItemSeparatorComponent={() => <Space />}
-                    data={movies}
+                    data={upcomingMovies}
                     keyExtractor={(item) => `${item.id}`}
                     renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
                 />
@@ -94,18 +104,20 @@ export class Movies extends React.Component<Props> {
         );
     }
 
-    private renderItem(item: Movie, width: number, height: number) {
-        return (<CryptocurrencyItem
-            source={item.poster_path}
+    private renderItem = (item: Movie, width: number, height: number) =>
+        (<MovieItem
+            source={item.posterPath}
             width={width}
             height={height}
-        />);
-    }
+        />)
 }
 
 const mapStateToProps = (state: State) => {
+    const getMovies = makeGetMovies()
     return {
-        movies: getMovies(state),
+        popularMovies: getMovies(state, MovieCategory.Popular),
+        topMovies: getMovies(state, MovieCategory.Top),
+        upcomingMovies: getMovies(state, MovieCategory.Upcoming),
         isLoading: isLoading(state),
         error: getError(state)
     }

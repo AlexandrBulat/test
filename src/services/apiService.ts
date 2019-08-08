@@ -8,28 +8,34 @@ import { moviesSchema } from "./schema";
 import { Constants } from "../constants/Constants";
 import ApiError from "../errors/ApiError";
 
-export interface IApiService {
-    getMovies(): Observable<NormalizedObject<Movie>>;
+type Status = {
+    status_code?: number,
+    status_message?: string
+}
+export enum MovieCategory {
+    Top = 'top_rated',
+    Popular = 'popular',
+    Upcoming = 'upcoming'
 }
 
-type Status = {
-    errorCode: number,
-    errorMessage?: string
+export interface IApiService {
+    getMovies(category: MovieCategory): Observable<NormalizedObject<Movie>>;
 }
+
 
 export class ApiService implements IApiService {
 
-    public getMovies(): Observable<NormalizedObject<Movie>> {
-        return ajax.get(`${Constants.BASE_URL}/movie/popular?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
+    public getMovies(category: MovieCategory): Observable<NormalizedObject<Movie>> {
+        return ajax.get(`${Constants.BASE_URL}/movie/${category}?${Constants.API_KEY_FIELD}=${Constants.API_KEY}`)
             .pipe(
                 switchMap((result) => {
-                    const status: Status = result.response
+                    const status: Status = result.response as Status
                     return status.status_code ?
                         Observable.throw(new ApiError(status.status_code, status.status_message)) :
-                        of(result)
+                        of(result.response)
                 }),
-                map((result) => {
-                    const normalizedMovies = normalize(result.response.results, moviesSchema)
+                map((response) => {
+                    const normalizedMovies = normalize(response.results, moviesSchema)
                     return {
                         byIds: normalizedMovies.entities.movies || {},
                         ids: normalizedMovies.result || []

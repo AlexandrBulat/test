@@ -2,14 +2,18 @@ import { TypeKeys } from "../constants/TypeKeys";
 import { ActionTypes } from "../actions";
 import { combineReducers } from "redux";
 import { createSelector } from "reselect"
-import { MoviesState, NormalizedObject } from "./types";
+import { MoviesState } from "./types";
 import { Movie } from "../types";
+import { MovieCategory } from "../services";
 
-const ids = (state: number[] = [], action: ActionTypes): number[] => {
+const ids = (state:{ [id: string]: number[] } = {}, action: ActionTypes): { [id: string]: number[] }  => {
     switch (action.type) {
         case TypeKeys. MOVIES_FETCH_FULFILLED:
-            const { movies } = action
-            return [...movies.ids]
+            return {
+                [MovieCategory.Popular]: action.popularIds,
+                [MovieCategory.Top]: action.topRatedIds,
+                [MovieCategory.Upcoming]: action.upcomingIds,
+            }
         default:
             return state
     }
@@ -18,8 +22,7 @@ const ids = (state: number[] = [], action: ActionTypes): number[] => {
 const byIds = (state: { [id: string]: Movie } = {}, action: ActionTypes): { [id: string]: Movie } => {
     switch (action.type) {
         case TypeKeys. MOVIES_FETCH_FULFILLED:
-            const { movies } = action
-            return { ...movies.byIds }
+            return { ...action.byIds }
         default:
             return state
     }
@@ -39,7 +42,7 @@ const loading = (state: boolean = false, action: ActionTypes): boolean => {
 
 const error = (state: Error | null = null, action: ActionTypes): Error | null => {
     switch (action.type) {
-        case TypeKeys. MOVIES_FETCH_FULFILLED:
+        case TypeKeys.MOVIES_FETCH_FULFILLED:
         case TypeKeys.MOVIES_FETCH:
             return null
         case TypeKeys.MOVIES_FETCH_FAILED:
@@ -56,13 +59,9 @@ export default combineReducers<MoviesState>({
     error
 })
 
-export const getMovies = createSelector(
-    [
-        (state: NormalizedObject<Movie>) => state.ids,
-        (state: NormalizedObject<Movie>) => state.byIds
-    ],
-    (ids: number[], byIds: { [id: string]: Movie }) => ids.map(id => byIds[id])
-)
+export const getIds = (state: MoviesState, category: MovieCategory): number[] => {
+    return state.ids[category] || []
+}
 
 export const isLoading = (state: MoviesState): boolean => {
     return state.loading
