@@ -18,7 +18,6 @@ const Subtitle = styled.Text`
     font-size: 16px
 `
 
-// TODO Make sub bigger
 export default (props: Props) => {
     return (
         <View>
