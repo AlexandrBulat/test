@@ -10,6 +10,12 @@ interface Props {
 
 const Title = styled.Text`
     color: ${Theme.color.white}
+    font-size: 12px
+`
+
+const Subtitle = styled.Text`
+    color: ${Theme.color.white};
+    font-size: 16px
 `
 
 // TODO Make sub bigger
@@ -17,7 +23,7 @@ export default (props: Props) => {
     return (
         <View>
             <Title>{props.title}</Title>
-            <Title>{props.subtitle}</Title>
+            <Subtitle>{props.subtitle}</Subtitle>
         </View>
     )
 }

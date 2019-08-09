@@ -42,12 +42,23 @@ export const List = styled(FlatList as new () => FlatList<[string, any]>).attrs(
 `
 const Divider = styled.View`
     height: 1px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     width: 100%;
     background-color: ${Theme.color.white};
 `
 
 //TODO Test
 export class MovieDetails extends React.Component<Props> {
+
+    static navigationOptions = {
+        title: '',
+        headerStyle: {
+          backgroundColor: Theme.color.black,
+          borderBottomWidth: 0,
+        },
+        headerTintColor: Theme.color.white, 
+      };
 
     componentDidMount() {
         this.props.fetchMovie(this.props.navigation.getParam('movieId'));

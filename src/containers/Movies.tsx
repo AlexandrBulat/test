@@ -2,7 +2,7 @@ import React from 'react';
 import {
     FlatList,
     Dimensions,
-    ActivityIndicator
+    ActivityIndicator,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
@@ -82,10 +82,9 @@ export class Movies extends React.Component<Props> {
 
         return (
             <SafeArea>
+                {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
+                {error && <ListError message={"An error occured!"} />}
                 <Wrapper>
-                    {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
-                    {error && <ListError message={"An error occured!"} />}
-
                     <Header>{'Popular'}</Header>
                     <List
                         horizontal

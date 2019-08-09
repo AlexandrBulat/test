@@ -7,14 +7,12 @@ const MoviesNavigator = createStackNavigator({
   [NavigationScreen.LANDING]: {
     screen: Movies,
     navigationOptions: {
+      headerBackTitle: null,
       header: null
     }
   },
   [NavigationScreen.DETAILS]: {
-    screen: MovieDetails,
-    navigationOptions: {
-
-    }
+    screen: MovieDetails
   },
   initialRouteName: NavigationScreen.LANDING,
 });
