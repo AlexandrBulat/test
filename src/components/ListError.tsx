@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native'
 import Theme from '../styles/Theme';
+import Button from './Button';
 
 const Wrapper = styled.View`
     height: 100%;
@@ -17,14 +18,17 @@ const Message = styled.Text`
 
 interface Props {
     message: string
+    title?: string
+    onPress?: () => void
 }
 
 export default class extends React.PureComponent<Props> {
     render() {
-        const { message } = this.props
+        const { message, onPress, title } = this.props
         return (
             <Wrapper>
                 <Message>{message}</Message>
+                {title && <Button onPress={onPress} title={title}></Button>}
             </Wrapper>
         )
     }

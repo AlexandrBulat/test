@@ -18,6 +18,8 @@ import ListError from '../components/ListError';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import NavigationScreen from '../navigators/NavigationScreen';
 import SafeArea from '../components/SafeArea';
+import { baseStyle } from '../styles/Base';
+import TopBar from '../components/TopBar';
 
 interface Props {
     readonly navigation: NavigationScreenProp<NavigationState>,
@@ -27,14 +29,15 @@ interface Props {
     readonly upcomingMovies: Movie[],
     readonly isLoading: boolean,
     readonly error: Error | null,
+    readonly theme: any
 };
 
-export const Wrapper = styled.ScrollView.attrs({
+export const Wrapper = styled.ScrollView.attrs(({ theme }: any): any =>({
     contentContainerStyle: {
         flexGrow: 1,
-        backgroundColor: Theme.color.black
+        backgroundColor: theme.background
     }
-})`
+}))`
 `
 
 export const List = styled(FlatList as new () => FlatList<Movie>).attrs({
@@ -50,7 +53,7 @@ const Header = styled.Text`
     font-size: 16px;
     margin-left: 10px;
     margin-top: 10px
-    color: ${Theme.color.white};
+    color:${(props:any) => props.theme.text}
     font-style: normal;
     font-weight: bold;
     flex-wrap: wrap;
@@ -78,13 +81,18 @@ export class Movies extends React.Component<Props> {
     }
 
     render() {
-        const { isLoading, error, popularMovies, topMovies, upcomingMovies } = this.props
+        const { isLoading, error, popularMovies, topMovies, upcomingMovies, fetchMovies } = this.props
 
         return (
             <SafeArea>
-                {isLoading && <ActivityIndicator size="large" color={Theme.color.white} style={{ alignSelf: 'center' }} />}
-                {error && <ListError message={"An error occured!"} />}
-                <Wrapper>
+                <TopBar/>
+                {isLoading && <ActivityIndicator size="large"
+                    color={Theme.color.white} style={baseStyle.loading} />}
+                {!isLoading && error && <ListError message={"An error occured!"}
+                    title={"Please retry"}
+                    onPress={fetchMovies} />}
+
+                {!isLoading && !error && <Wrapper>
                     <Header>{'Popular'}</Header>
                     <List
                         horizontal
@@ -109,7 +117,7 @@ export class Movies extends React.Component<Props> {
                         keyExtractor={(item) => `${item.id}`}
                         renderItem={({ item }: { item: Movie }) => this.renderItem(item, WIDTH, HEIGHT)}
                     />
-                </Wrapper>
+                </Wrapper>}
             </SafeArea>
         );
     }

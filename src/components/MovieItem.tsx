@@ -8,6 +8,7 @@ interface Props {
     source: any,
     width: number,
     height: number
+    theme: any
     onPress?: () => void
 }
 
@@ -15,7 +16,7 @@ const Image = styled.Image`
     width: ${(props: Props) => props.width}px;
     height: ${(props: Props) => props.height}px;
     border-radius: 5px;
-    border-color: ${Theme.color.white}
+    border-color: ${(props: Props) => props.theme.border};
     border-width: 1px
 `
 
